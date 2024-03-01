@@ -1,140 +1,52 @@
 {% extends 'homePage/index.html' %} {% block content %}
-<style>
-  #modelPredictions {
-    width: 100%;
-    height: 500px;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
-  }
-a:link { 
-  text-decoration: none; 
-  color:black;
-} 
-a:visited { 
-  text-decoration: none; 
-  color:black;
+<div class="bodyText">
+ <h1 style="text-align: center;">The fake news detector you didn't know you needed.</h1>
 
-} 
-a:hover { 
-  text-decoration: none; 
-  color:blue;
-} 
-a:active { 
-  text-decoration: none; 
-  color:black;
-
-}
-
-</style>
-<div class="container mt-4">
-  <div class="row justify-content-center">
-    <!-- Detection Window Column -->
-    <div class="col-md-8">
-      <!-- Detection page -->
-      <div class="detectionWindow">
-        <h4>Claim Checking Model</h4>
-
-        <form action="{% url 'claimcheck' %}" method="post">
-          {% csrf_token %}
-          <!-- <label for="user_input">Enter news text:</label>-->
-          <br />
-          <textarea
-            id="user_input"
-            name="user_input"
-            required
-            oninput="setUserInputToSessionStorage()"
-          ></textarea>
-          <br />
-          <button type="submit" class="btn btn-dark">Predict</button>
-        </form>
-      </div>
-    </div>
-  </div>
-  <!-- Result section -->
-  <div class="col-md-12 mt-4">
-    <h4>Result</h4>
-    <div class="row">
-      <div class="col-md-3 mb-3">{{ result }}</div>
-      {% for article in claim_results %}
-      <div class="col-md-4 mb-4">
-          <a href="{{ article.link }}">
-        <div id="modelPredictions">
-          <h5>{{ article.title }}</h5>
-          <ul>
-            <li>Stance1: {{ article.p1 }}</li>
-            <li>Stance2: {{ article.p2 }}</li>
-            <li>Average Stance: {{ article.average }}</li>
-           
-            <!-- Display max value of p2 -->
-             <li>p1 stance: {{ article.maxp1 }}</li>
-             <li>p2 stance: {{ article.maxp2 }}</li>
-             <li>average stance: {{ article.maxavg }}</li>
-            
-
-
-            <!-- Display max value of p2 -->
-          </ul>
+      <div class="row">
+        <div class="col-sm-4 mb-3 mb-sm-0">
+          <div class="card">
+            <div class="center">
+            <br>
+            <i class="large material-icons" style="color: #ee6e73">sick</i>
+            <div class="card-body">
+              <h5 class="card-title"><p>Is the dis(information) age making you sick?</p></h5>
+              <p class="card-text"><p class="light center">Don't fret, and cure your illness with this brand-new detector.</p></p>
+            </div>
+          </div>
+          </div>
         </div>
-        </a>
+        <div class="col-sm-4 mb-3 mb-sm-0">
+          <div class="card">
+            <div class="center">
+            <br>
+            <i class="large material-icons" style="color: green">fact_check</i>
+            <div class="card-body">
+              <h5 class="card-title"><p>Fact-check the news you read every day.</p></h5>
+              <p class="card-text"><p class="light center">Just copy the text you want to try out. Press the button below.</p></p>
+            </div>
+          </div>
+          </div>
+        </div>
+        <div class="col-sm-4 mb-3 mb-sm-0">
+          <div class="card">
+            <div class="center">
+            <br>
+            <i class="large material-icons" style="color: #fa9905">sentiment_very_satisfied</i>
+            <div class="card-body">
+              <h5 class="card-title"><p>A Machine Learning approach.</p></h5>
+              <p class="card-text"><p class="light center">If you're satisfied, we collect the results of the news you send to us.</p></p>
+            </div>
+          </div>
+          </div>
+        </div>
+
       </div>
-      {% endfor %}
-    </div>
-  </div>
-</div>
 
-<script>
-  function setUserInputToSessionStorage() {
-    userInputValue = document.getElementById("user_input").value;
-    sessionStorage.setItem("user_input", userInputValue);
-  }
+      </div>
+      <br>
+      <br>
+      <div class="d-grid gap-2 col-2 mx-auto">
+        <a href="%  %" class="btn btn-primary"  role="button" aria-disabled="true" style="--bs-btn-padding-y: 40rem; --bs-btn-padding-x: 40rem; --bs-btn-font-size: .75rem;">Make Prediction</a>
+      </div>
 
-  async function makePrediction(event) {
-    event.preventDefault(); // Prevent default form submission behavior
-
-    // Get user input
-    userInputValue = document.getElementById("user_input").value;
-
-    try {
-      // asynchronous POST request to the Django view
-      const response = await fetch('{% url "home" %}', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "X-CSRFToken": "{{ csrf_token }}",
-        },
-        body: new URLSearchParams({
-          user_input: userInputValue,
-        }),
-      });
-
-      const data = await response.json();
-      console.log(data);
-
-      // Update only the result section dynamically
-      document.getElementById("result").innerHTML =
-        "<p>" + data.result + "</p><p>" + data.prediction + "</p>";
-
-      // Set the user input back to the input field
-      document.getElementById("user_input").value = userInputValue;
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  }
-
-  // Retain user input on page reload
-  window.onload = function () {
-    // Check session storage for user input
-    const storedUserInput = sessionStorage.getItem("user_input");
-
-    if (storedUserInput) {
-      document.getElementById("user_input").value = storedUserInput;
-    }
-  };
-</script>
 {% endblock %}
