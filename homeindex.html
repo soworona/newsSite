@@ -1,14 +1,15 @@
+
 {% extends 'homePage/index.html' %}
 {% block content %}
-  
-<div class="container mt-4">
+
+<div class="container bodyText">
   <div class="row">
     <!-- Detection Window Column -->
-    <div class="col-md-8">
+    <div class="col-sm-8">
       <!-- Detection page -->
-      <div class="detectionWindow">
-        <h3>Fake News Detection System</h3> 
-   
+      <div >
+        <h4>Enter news article</h4> 
+
         <form action="{% url 'home' %}" method="post" >
           {% csrf_token %}
           <!-- <label for="user_input">Enter news text:</label>-->
@@ -21,18 +22,30 @@
     </div>
 
     <!-- Result section -->
-    <div class="col-md-4">
-      <h3> Result</h3>
-      {% if result %}
-        <p>{{ result }}</p>
-        <p>{{ prediction }}</p>
-        <div id="myProgress">
-          <div id="myBar"></div>
-        </div>
-      {% endif %}
-    </div>
 
-  </div>
+        <div class="col-sm-4">
+            <h4> Result</h4>
+            <h6>This news is likely </h6>
+             {% if result == 'Real' %}
+                <strong style="font-size: 1.5rem; color: green;">{{result}}</strong>
+                 <p>{{ prediction }}</p>
+               <div id="myProgress">
+                <div id="myBar"></div>
+
+
+                </div>
+             {% else %}
+               <strong style="font-size: 1.5rem; color: red;">{{result}}</strong>
+               <p>{{ prediction }}</p>
+                 <div id="myProgress">
+                  <div id="myBar"></div>
+                  </div>
+                {% endif %}
+        </div>
+
+
+
+
 
   <!-- JavaScript code for the progress bar -->
   <script>
@@ -60,6 +73,8 @@
       }
     }
   </script>
+  </div>
+   </div>
 
   <!-- JavaScript code for session storage and AJAX request -->
   <script>
@@ -104,12 +119,10 @@
     window.onload = function() {
       // Check session storage for user input
       const storedUserInput = sessionStorage.getItem('user_input');
-      
+
       if (storedUserInput) {
         document.getElementById('user_input').value = storedUserInput;
       }
     };
   </script>
 
-</div>
-{% endblock %}
